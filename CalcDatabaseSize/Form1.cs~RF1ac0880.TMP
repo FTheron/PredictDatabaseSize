@@ -1,0 +1,160 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.Sql;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace CalcDatabaseSize
+{
+    public partial class MainForm : Form
+    {
+        public SqlConnection sqlConn;
+        public String file;
+
+
+        public MainForm()
+        {
+            InitializeComponent();
+
+            tbServerName.Text = Properties.Settings.Default.ServerName;
+        }
+
+        private void tbServerName_Event(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnConnect_Click((object)sender, (EventArgs)e);
+            }
+        }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default["ServerName"] = tbServerName.Text;
+            Properties.Settings.Default.Save();
+            try
+            {
+                // Connect to the Database
+                using (sqlConn = new SqlConnection("Data Source=" + tbServerName.Text + ";Integrated Security=SSPI;"))
+                {
+                    sqlConn.Open();
+                    DataTable tblDatabases = sqlConn.GetSchema("Databases");
+                    sqlConn.Close();
+
+                    List<String> databases = new List<String>();
+                    foreach (DataRow row in tblDatabases.Rows)
+                    {
+                        String strDatabaseName = row["database_name"].ToString();
+
+                        databases.Add(strDatabaseName);
+                    }
+                    cbDatabases.DataSource = databases;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(null, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void cbDatabases_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Connect to the database and get all the tables
+            using (sqlConn = new SqlConnection("Data Source=" + tbServerName.Text + ";Initial Catalog=" + cbDatabases.Text + ";Integrated Security=SSPI;"))
+            {
+                sqlConn.Open();
+
+                List<String> tables = new List<String>();
+                DataTable schema = sqlConn.GetSchema("Tables");
+                foreach (DataRow row in schema.Rows)
+                {
+                    tables.Add(row[2].ToString());
+                }
+                cbTables.DataSource = tables;
+            }
+        }
+
+        private void btnCalculate_Click(object sender, EventArgs e)
+        {
+            sqlConn = new SqlConnection("Data Source=" + tbServerName.Text + ";Initial Catalog=" + cbDatabases.Text + ";Integrated Security=SSPI;");
+
+            using (SqlCommand command = sqlConn.CreateCommand())
+            {
+                command.CommandText = "SELECT * FROM " + cbTables.Text;
+                sqlConn.Open();
+
+                StringBuilder sb = new StringBuilder();
+                string format = "{0,-25}{1,-7}{2,-10}";
+                int totalBytes = 0;
+
+                using (var reader = command.ExecuteReader(CommandBehavior.SchemaOnly))
+                {
+                    reader.Read();
+                    DataTable schema = reader.GetSchemaTable();
+
+                    sb.AppendFormat(format, "Name", "Bytes", "Type").AppendLine().AppendLine();
+
+                    foreach (DataRow row in schema.Rows)
+                    {
+                        int size = Int32.Parse(row["ColumnSize"].ToString());
+                        string type = row["DataTypeName"].ToString();
+                        int bytes = 0;
+                        switch (type)
+                        {
+                            case "char":
+                                bytes = 2 * size;
+                                break;
+                            case "varchar":
+                                bytes = 2 * size;
+                                break;
+                            default:
+                                bytes = size;
+                                break;
+                        }
+                        sb.AppendFormat(format, row["ColumnName"], bytes, type).AppendLine();
+                        totalBytes += bytes;
+                    }
+                }
+
+                sb.AppendFormat("{0,-25}{1,-5}", "Bytes per Row", totalBytes).AppendLine();
+                sb.AppendFormat("{0,-25}{1,-5}", "Rows", tbRows.Text).AppendLine();
+                sb.AppendFormat("{0,-25}{1,-5}", "Compression", nudCompression.Value + "%").AppendLine();
+                sb.AppendFormat("{0,-25}{1,-5}", "Index Ratio", nudIndexRatio.Value + "%").AppendLine();
+
+                // TODO: Revise calculations
+                decimal totalSize = totalBytes * Int32.Parse(tbRows.Text);
+                totalSize *= (100 - nudCompression.Value) / 100;
+                totalSize *= (100 + nudIndexRatio.Value) / 100;
+
+                sb.AppendLine(cbDatabases.Text + "." + cbTables.Text + " Total Size:  ");
+                decimal totalGB = totalSize / 1048576;
+                sb.AppendLine(totalSize + " bytes");
+
+                lblTotalSize.Text = totalGB.ToString("0.##") + " MB";
+
+                sb.AppendLine(lblTotalSize.Text);
+
+                file = sb.ToString();
+            }
+        }
+
+        private void btnReport_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            DialogResult result = fbd.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                File.WriteAllText(fbd.SelectedPath, file);
+            }
+
+            
+        }
+    }
+}

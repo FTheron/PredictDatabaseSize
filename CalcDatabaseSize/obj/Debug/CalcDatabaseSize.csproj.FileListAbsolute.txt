@@ -1,0 +1,9 @@
+C:\Users\cp322326\Documents\Visual Studio 2013\Projects\CalcDatabaseSize\CalcDatabaseSize\obj\Debug\CalcDatabaseSize.MainForm.resources
+C:\Users\cp322326\Documents\Visual Studio 2013\Projects\CalcDatabaseSize\CalcDatabaseSize\obj\Debug\CalcDatabaseSize.Properties.Resources.resources
+C:\Users\cp322326\Documents\Visual Studio 2013\Projects\CalcDatabaseSize\CalcDatabaseSize\obj\Debug\CalcDatabaseSize.csproj.GenerateResource.Cache
+C:\Users\cp322326\Documents\Visual Studio 2013\Projects\CalcDatabaseSize\CalcDatabaseSize\bin\Debug\CalcDatabaseSize.exe.config
+C:\Users\cp322326\Documents\Visual Studio 2013\Projects\CalcDatabaseSize\CalcDatabaseSize\bin\Debug\CalcDatabaseSize.exe
+C:\Users\cp322326\Documents\Visual Studio 2013\Projects\CalcDatabaseSize\CalcDatabaseSize\bin\Debug\CalcDatabaseSize.pdb
+C:\Users\cp322326\Documents\Visual Studio 2013\Projects\CalcDatabaseSize\CalcDatabaseSize\obj\Debug\CalcDatabaseSize.exe
+C:\Users\cp322326\Documents\Visual Studio 2013\Projects\CalcDatabaseSize\CalcDatabaseSize\obj\Debug\CalcDatabaseSize.pdb
+C:\Users\cp322326\Documents\Visual Studio 2013\Projects\CalcDatabaseSize\CalcDatabaseSize\obj\Debug\CalcDatabaseSize.csprojResolveAssemblyReference.cache

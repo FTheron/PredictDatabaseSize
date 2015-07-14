@@ -1,0 +1,114 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.Sql;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace CalcDatabaseSize
+{
+    public partial class MainForm : Form
+    {
+        public SqlConnection sqlConn;
+        public MainForm()
+        {
+            InitializeComponent();
+
+            tbServerName.Text = Properties.Settings.Default.ServerName;
+        }
+
+        private void tbServerName_Event(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnConnect_Click((object)sender, (EventArgs)e);
+            }
+        }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default["ServerName"] = tbServerName.Text;
+            Properties.Settings.Default.Save();
+            try
+            {
+                // Connect to the Database
+                using (sqlConn = new SqlConnection("Data Source=" + tbServerName.Text + ";Integrated Security=SSPI;"))
+                {
+                    sqlConn.Open();
+                    DataTable tblDatabases = sqlConn.GetSchema("Databases");
+                    sqlConn.Close();
+
+                    List<String> databases = new List<String>();
+                    foreach (DataRow row in tblDatabases.Rows)
+                    {
+                        String strDatabaseName = row["database_name"].ToString();
+
+                        databases.Add(strDatabaseName);
+                    }
+                    cbDatabases.DataSource = databases;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(null, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void cbDatabases_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Connect to the database and get all the tables
+            using (sqlConn = new SqlConnection("Data Source=" + tbServerName.Text + ";Initial Catalog=" + cbDatabases.Text + ";Integrated Security=SSPI;"))
+            {
+                sqlConn.Open();
+
+                List<String> tables = new List<String>();
+                DataTable schema = sqlConn.GetSchema("Tables");
+                foreach (DataRow row in schema.Rows)
+                {
+                    tables.Add(row[2].ToString());
+                }
+                cbTables.DataSource = tables;
+            }
+        }
+
+        private void btnCalculate_Click(object sender, EventArgs e)
+        {
+            sqlConn = new SqlConnection("Data Source=" + tbServerName.Text + ";Initial Catalog=" + cbDatabases.Text + ";Integrated Security=SSPI;");
+
+            using (SqlCommand command = sqlConn.CreateCommand())
+            {
+                command.CommandText = "SELECT * FROM " + cbTables.Text;
+                sqlConn.Open();
+
+                using (var reader = command.ExecuteReader(CommandBehavior.SchemaOnly))
+                {
+                    reader.Read();
+                    DataTable schema = reader.GetSchemaTable();
+
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendFormat("{0,6}{1,-10}{2,14}{3,-4}{4,14}{5,-5}", "Rows: ", tbRows.Text , "Compression: ", nudCompression.Value, "Index Ratio: ", tbIndexRatio.Text).AppendLine().AppendLine();
+                    string format = "{0,-25}{1,-5}{2,-10}{3,-6}";
+                    sb.AppendFormat(format, "Name", "Size", "Type" ).AppendLine().AppendLine();
+
+                    foreach (DataRow row in schema.Rows)
+                    {
+                        sb.AppendFormat(format, row["ColumnName"], row["ColumnSize"], row["DataTypeName"]);
+                        sb.AppendLine("");
+                    }
+                    File.WriteAllText(@"C:\Users\cp322326\Downloads\report.txt", sb.ToString());
+                }
+            }
+        }
+
+        private void btnReport_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
