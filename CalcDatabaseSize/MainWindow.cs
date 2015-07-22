@@ -10,7 +10,7 @@ namespace CalcDatabaseSize
     public partial class MainForm : Form
     {
         public SqlConnection SqlConn;
-        public String File;
+        public string File;
 
         public MainForm()
         {
@@ -40,10 +40,10 @@ namespace CalcDatabaseSize
                     DataTable tblDatabases = SqlConn.GetSchema("Databases");
                     SqlConn.Close();
 
-                    List<String> databases = new List<String>();
+                    List<string> databases = new List<string>();
                     foreach (DataRow row in tblDatabases.Rows)
                     {
-                        String strDatabaseName = row["database_name"].ToString();
+                        string strDatabaseName = row["database_name"].ToString();
 
                         databases.Add(strDatabaseName);
                     }
@@ -65,7 +65,7 @@ namespace CalcDatabaseSize
                 {
                     SqlConn.Open();
 
-                    List<String> tables = new List<String>();
+                    List<string> tables = new List<string>();
                     DataTable schema = SqlConn.GetSchema("Tables");
                     foreach (DataRow row in schema.Rows)
                     {
@@ -94,7 +94,7 @@ namespace CalcDatabaseSize
                     StringBuilder sb = new StringBuilder();
                     Int64 totalBytes = 0;
 
-                    using (var reader = command.ExecuteReader(CommandBehavior.SchemaOnly))
+                    using (SqlDataReader reader = command.ExecuteReader(CommandBehavior.SchemaOnly))
                     {
                         reader.Read();
                         DataTable schema = reader.GetSchemaTable();
@@ -105,9 +105,10 @@ namespace CalcDatabaseSize
                         if (schema != null)
                             foreach (DataRow row in schema.Rows)
                             {
-                                Int64 size = Int64.Parse(row["ColumnSize"].ToString());
+                                long size = long.Parse(row["ColumnSize"].ToString());
                                 string type = row["DataTypeName"].ToString();
-                                Int64 bytes;
+                                string name = row["ColumnName"].ToString();
+                                long bytes;
 
                                 switch (type)
                                 {
@@ -117,13 +118,16 @@ namespace CalcDatabaseSize
                                     case "varchar":
                                         bytes = 2 * size;
                                         break;
+                                    case "varbinary":
+                                        bytes = (long) (GetLongestVarbinary(name) * 0.15);
+                                        break;
                                     default:
                                         bytes = size;
                                         break;
                                 }
                                 TableRow tableRow = new TableRow
                                 {
-                                    Name = row["ColumnName"].ToString(),
+                                    Name = name,
                                     Size = bytes,
                                     DataType = type
                                 };
@@ -184,6 +188,26 @@ namespace CalcDatabaseSize
             }
         }
 
+        private long GetLongestVarbinary(string column)
+        {
+            SqlConn = new SqlConnection("Data Source=" + tbServerName.Text + ";Initial Catalog=" + cbDatabases.Text + ";Integrated Security=SSPI;");
+
+            using (SqlCommand command = SqlConn.CreateCommand())
+            {
+                command.CommandText = "SELECT max(len([" + column + "])) as [MaxSize] FROM " + cbDatabases.Text + "." + cbTables.Text;
+                SqlConn.Open();
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    reader.Read();
+                    int result;
+                    int.TryParse(reader["maxSize"].ToString(), out result);
+
+                    return result;
+                }
+            }
+        }
+
         private void btnReport_Click(object sender, EventArgs e)
         {
             try
@@ -194,7 +218,7 @@ namespace CalcDatabaseSize
                     FilterIndex = 2,
                     RestoreDirectory = true,
                     DefaultExt = "txt",
-                    FileName = cbDatabases.Text + "_" + cbTables.Text
+                    FileName = cbDatabases.Text + "_" + cbTables.Text + ".txt"
                 };
 
                 if (saveReport.ShowDialog() == DialogResult.OK)

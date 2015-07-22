@@ -10,3 +10,11 @@ C:\Users\cp322326\Documents\Visual Studio 2013\Projects\CalcDatabaseSize\CalcDat
 C:\Users\cp322326\Dropbox\VisualStudio\CalcDatabaseSize\CalcDatabaseSize\bin\Release\DB Estimator.exe.config
 C:\Users\cp322326\Dropbox\VisualStudio\CalcDatabaseSize\CalcDatabaseSize\obj\Release\DB Estimator.exe
 C:\Users\cp322326\Dropbox\VisualStudio\CalcDatabaseSize\CalcDatabaseSize\obj\Release\DB Estimator.pdb
+C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\bin\Release\DB Estimator.exe.config
+C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\obj\Release\DB Estimator.exe
+C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\obj\Release\DB Estimator.pdb
+C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\bin\Release\DB Estimator.exe
+C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\bin\Release\DB Estimator.pdb
+C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\obj\Release\CalcDatabaseSize.MainForm.resources
+C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\obj\Release\CalcDatabaseSize.Properties.Resources.resources
+C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\obj\Release\DB Estimator.csproj.GenerateResource.Cache

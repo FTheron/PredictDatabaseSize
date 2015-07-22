@@ -1,0 +1,9 @@
+C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\bin\Debug\DB Estimator.exe.config
+C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\bin\Debug\DB Estimator.exe
+C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\bin\Debug\DB Estimator.pdb
+C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\obj\Debug\DB Estimator.csprojResolveAssemblyReference.cache
+C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\obj\Debug\CalcDatabaseSize.MainForm.resources
+C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\obj\Debug\CalcDatabaseSize.Properties.Resources.resources
+C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\obj\Debug\DB Estimator.csproj.GenerateResource.Cache
+C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\obj\Debug\DB Estimator.exe
+C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\obj\Debug\DB Estimator.pdb
