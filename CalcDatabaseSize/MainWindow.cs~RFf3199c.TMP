@@ -100,7 +100,7 @@ namespace CalcDatabaseSize
                         DataTable schema = reader.GetSchemaTable();
 
                         List<TableRow> tableRows = new List<TableRow>();
-                        int nameMaxLength = 5;
+                        int nameMaxLength = 0;
                         int sizeLength = 0;
                         if (schema != null)
                             foreach (DataRow row in schema.Rows)
@@ -109,10 +109,26 @@ namespace CalcDatabaseSize
                                 string type = row["DataTypeName"].ToString();
                                 string name = row["ColumnName"].ToString();
                                 long bytes;
-                                
-                                // condition ? true : false
-                                bytes = size > 2000000000 ? (long)(GetMaximumSize(name) * 0.15) : size;
 
+                                switch (type)
+                                {
+                                    case "char":
+                                        bytes = 2 * size;
+                                        break;
+                                    case "varchar":
+                                        bytes = 2 * size;
+                                        break;
+                                    default:
+                                        if (size > 2000)
+                                        {
+                                            bytes = (long)(GetMaximumSize(name) * 0.15);
+                                        }
+                                        else { bytes = size; }
+
+
+                                        
+                                        break;
+                                }
                                 TableRow tableRow = new TableRow
                                 {
                                     Name = name,
@@ -120,10 +136,14 @@ namespace CalcDatabaseSize
                                     DataType = type
                                 };
 
-                                if (nameMaxLength < tableRow.Name.Length) nameMaxLength = tableRow.Name.Length;
-
-                                if (sizeLength < tableRow.Size.ToString().Length) sizeLength = tableRow.Size.ToString().Length;
-
+                                if (nameMaxLength < tableRow.Name.Length)
+                                {
+                                    nameMaxLength = tableRow.Name.Length;
+                                }
+                                if (sizeLength < tableRow.Size.ToString().Length)
+                                {
+                                    sizeLength = tableRow.Size.ToString().Length;
+                                }
                                 tableRows.Add(tableRow);
                             }
 
@@ -208,7 +228,6 @@ namespace CalcDatabaseSize
                 if (saveReport.ShowDialog() == DialogResult.OK)
                 {
                     System.IO.File.WriteAllText(saveReport.FileName, File);
-                    System.Diagnostics.Process.Start(saveReport.FileName);
                 }
             }
             catch (Exception ex)
