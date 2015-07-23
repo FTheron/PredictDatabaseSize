@@ -119,7 +119,10 @@ namespace CalcDatabaseSize
                                         bytes = 2 * size;
                                         break;
                                     case "varbinary":
-                                        bytes = (long) (GetLongestVarbinary(name) * 0.15);
+                                        bytes = (long) (GetMaximumSize(name) * 0.15);
+                                        break;
+                                    case "nvarchar":
+                                        bytes = (long)(GetMaximumSize(name) * 0.15);
                                         break;
                                     default:
                                         bytes = size;
@@ -188,7 +191,7 @@ namespace CalcDatabaseSize
             }
         }
 
-        private long GetLongestVarbinary(string column)
+        private long GetMaximumSize(string column)
         {
             SqlConn = new SqlConnection("Data Source=" + tbServerName.Text + ";Initial Catalog=" + cbDatabases.Text + ";Integrated Security=SSPI;");
 
