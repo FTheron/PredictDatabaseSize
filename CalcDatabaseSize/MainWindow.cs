@@ -8,6 +8,9 @@ using System.Windows.Forms;
 
 namespace CalcDatabaseSize
 {
+    /// <summary>
+    /// Contains the main code for estimator.
+    /// </summary>
     public partial class MainForm : Form
     {
         public SqlConnection SqlConn;

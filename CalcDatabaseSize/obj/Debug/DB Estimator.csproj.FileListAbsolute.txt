@@ -8,3 +8,13 @@ C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\obj\Debug\D
 C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\obj\Debug\DB Estimator.pdb
 C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\obj\Debug\DB Estimator.csprojResolveAssemblyReference.cache
 C:\Users\cp322326\Documents\Git\PredictDatabaseSize\CalcDatabaseSize\obj\Debug\CalcDatabaseSize.TableControle.resources
+C:\CodeRepo\PredictDatabaseSize\CalcDatabaseSize\bin\Debug\DB Estimator.exe.config
+C:\CodeRepo\PredictDatabaseSize\CalcDatabaseSize\obj\Debug\DB Estimator.exe
+C:\CodeRepo\PredictDatabaseSize\CalcDatabaseSize\obj\Debug\DB Estimator.pdb
+C:\CodeRepo\PredictDatabaseSize\CalcDatabaseSize\bin\Debug\DB Estimator.exe
+C:\CodeRepo\PredictDatabaseSize\CalcDatabaseSize\bin\Debug\DB Estimator.pdb
+C:\CodeRepo\PredictDatabaseSize\CalcDatabaseSize\obj\Debug\DB Estimator.csprojResolveAssemblyReference.cache
+C:\CodeRepo\PredictDatabaseSize\CalcDatabaseSize\obj\Debug\CalcDatabaseSize.MainForm.resources
+C:\CodeRepo\PredictDatabaseSize\CalcDatabaseSize\obj\Debug\CalcDatabaseSize.Properties.Resources.resources
+C:\CodeRepo\PredictDatabaseSize\CalcDatabaseSize\obj\Debug\CalcDatabaseSize.TableControle.resources
+C:\CodeRepo\PredictDatabaseSize\CalcDatabaseSize\obj\Debug\DB Estimator.csproj.GenerateResource.Cache
